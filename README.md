@@ -21,3 +21,5 @@ Run the script `password_generator.py` with Python. Ensure that you have Tkinter
 
 - Python 3
 - Tkinter
+
+![Main Window](/1700175697.png)
