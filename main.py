@@ -71,7 +71,7 @@ def reset_ui():
 
 # Create the main window
 root = tk.Tk()
-root.title("Multi-functional Tool")
+root.title("RNGesus")
 center_window(400, 300)
 
 # Create Tab Control
