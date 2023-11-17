@@ -4,6 +4,7 @@ import secrets
 import string
 import random
 
+
 # Function to generate a random password
 def generate_password(length, use_uppercase, use_lowercase, use_digits, use_specials):
     characters = ""
@@ -23,6 +24,7 @@ def generate_password(length, use_uppercase, use_lowercase, use_digits, use_spec
         messagebox.showwarning("Warning", "Please select at least one character type!")
         return ""
 
+
 # Function to update the password entry with a new password
 def update_password():
     length = int(length_scale.get())
@@ -34,6 +36,7 @@ def update_password():
     new_password = generate_password(length, use_uppercase, use_lowercase, use_digits, use_specials)
     password_entry.delete(0, tk.END)
     password_entry.insert(0, new_password)
+
 
 # Function to generate a random number with a given number of digits
 def generate_random_number(digits):
@@ -47,6 +50,7 @@ def generate_random_number(digits):
         messagebox.showwarning("Warning", "The number of digits must be greater than 0!")
         return ""
 
+
 # Function to update the random number entry with a new number
 def update_random_number():
     digits = int(digits_entry.get())
@@ -57,6 +61,7 @@ def update_random_number():
     else:
         messagebox.showinfo("Information", "Enter a valid number of digits.")
 
+
 # Center the window on the screen
 def center_window(width=300, height=200):
     screen_width = root.winfo_screenwidth()
@@ -65,9 +70,11 @@ def center_window(width=300, height=200):
     y = (screen_height / 2) - (height / 2)
     root.geometry('%dx%d+%d+%d' % (width, height, x, y))
 
+
 # Reset the UI to the initial dimensions
 def reset_ui():
     center_window(400, 300)
+
 
 # Create the main window
 root = tk.Tk()
