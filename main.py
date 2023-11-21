@@ -56,26 +56,42 @@ def update_password():
 
 # Function to generate a random number with a given number of digits
 def generate_random_number(digits):
-    if digits > 0:
-        first_digit = str(random.randint(1, 9))
-        remaining_digits = ''
-        for _ in range(digits - 1):
-            remaining_digits += str(random.randint(0, 9))
-        return first_digit + remaining_digits
-    else:
-        messagebox.showwarning("Warning", "The number of digits must be greater than 0!")
+    try:
+        # Convert the input to an integer
+        digits = int(digits)
+
+        # Check if the number of digits is greater than 0
+        if digits > 0:
+            first_digit = str(random.randint(1, 9))
+            remaining_digits = ''.join(str(random.randint(0, 9)) for _ in range(digits - 1))
+            return first_digit + remaining_digits
+        else:
+            messagebox.showwarning("Warning", "The number of digits must be greater than 0!")
+            return ""
+
+    except ValueError:
+        # If the conversion to an integer fails, it means the input is not a number
+        messagebox.showwarning("Warning", "Please enter a numeric value!")
         return ""
 
 
 # Function to update the random number entry with a new number
 def update_random_number():
-    digits = int(digits_entry.get())
+    digits_str = digits_entry.get()
+
+    # Check if the entry field is empty or not a number
+    if not digits_str.isdigit() or not digits_str:
+        messagebox.showinfo("Error", "Please enter a number.")
+        return
+
+    digits = int(digits_str)
+
     if digits > 0:
         random_number = generate_random_number(digits)
         number_entry.delete(0, tk.END)
         number_entry.insert(0, random_number)
     else:
-        messagebox.showinfo("Information", "Enter a valid number of digits.")
+        messagebox.showinfo("Error", "Number must be greater than 0.")
 
 
 # Function to let the user copy the generated content to the clipboard
@@ -100,7 +116,7 @@ def reset_ui():
 
 # Create the main window
 root = tk.Tk()
-root.title("Password Generator")
+root.title("Password Generator --- Sicher isch sicher 👍")
 center_window(400, 300)
 
 # Create Tab Control
@@ -148,7 +164,7 @@ reset_button.pack(side='left', padx=5)
 spacer1_label = tk.Label(button_frame_password, text="")
 spacer1_label.pack(side='left', padx=(25, 25), pady=(0, 0))
 
-generate_button = tk.Button(button_frame_password, text="Generate Password", command=update_password)
+generate_button = tk.Button(button_frame_password, text="Generate Password", command=update_password, bg='light blue')
 generate_button.pack(side='right', padx=5)
 
 copy_password_button = tk.Button(button_frame_password, text="Copy Password", command=lambda: copy_to_clipboard(password_entry))
@@ -177,7 +193,7 @@ reset_button.pack(side='left', padx=5)
 spacer2_label = tk.Label(button_frame_number, text="")
 spacer2_label.pack(side='left', padx=(25, 25), pady=(0, 0))
 
-generate_number_button = tk.Button(button_frame_number, text="Generate Number", command=update_random_number)
+generate_number_button = tk.Button(button_frame_number, text="Generate Number", command=update_random_number, bg='light blue')
 generate_number_button.pack(side='right', padx=5)
 
 copy_number_button = tk.Button(button_frame_number, text="Copy Number", command=lambda: copy_to_clipboard(number_entry))
