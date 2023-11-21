@@ -8,20 +8,36 @@ import random
 # Function to generate a random password
 def generate_password(length, use_uppercase, use_lowercase, use_digits, use_specials):
     characters = ""
+    guaranteed_characters = []
+
+    # Adding at least one character from each selected category
     if use_uppercase:
         characters += string.ascii_uppercase
+        guaranteed_characters.append(secrets.choice(string.ascii_uppercase))
     if use_lowercase:
         characters += string.ascii_lowercase
+        guaranteed_characters.append(secrets.choice(string.ascii_lowercase))
     if use_digits:
         characters += string.digits
+        guaranteed_characters.append(secrets.choice(string.digits))
     if use_specials:
         characters += string.punctuation
+        guaranteed_characters.append(secrets.choice(string.punctuation))
 
-    if characters:
-        # Using secrets.choice instead of random.choice for better security
-        return ''.join(secrets.choice(characters) for _ in range(length))
+    # Check if there are enough characters to fill the password length
+    if characters and length >= len(guaranteed_characters):
+        # Fill the rest of the password length with random choices from all selected categories
+        remaining_length = length - len(guaranteed_characters)
+        random_characters = ''.join(secrets.choice(characters) for _ in range(remaining_length))
+
+        # Combine guaranteed characters with random characters and shuffle them
+        final_password = guaranteed_characters + list(random_characters)
+        random.shuffle(final_password)
+
+        return ''.join(final_password)
     else:
-        messagebox.showwarning("Warning", "Please select at least one character type!")
+        messagebox.showwarning("Warning",
+                               "Please select at least one character type, and ensure password length is sufficient!")
         return ""
 
 
@@ -62,6 +78,12 @@ def update_random_number():
         messagebox.showinfo("Information", "Enter a valid number of digits.")
 
 
+# Function to let the user copy the generated content to the clipboard
+def copy_to_clipboard(entry_widget):
+    root.clipboard_clear()
+    root.clipboard_append(entry_widget.get())
+
+
 # Center the window on the screen
 def center_window(width=300, height=200):
     screen_width = root.winfo_screenwidth()
@@ -78,7 +100,7 @@ def reset_ui():
 
 # Create the main window
 root = tk.Tk()
-root.title("RNGesus")
+root.title("Password Generator")
 center_window(400, 300)
 
 # Create Tab Control
@@ -98,7 +120,7 @@ password_entry = tk.Entry(password_tab, width=24)
 password_entry.pack(fill='x', padx=10, pady=10)
 
 length_scale = tk.Scale(password_tab, from_=6, to_=128, orient='horizontal', label='Password length')
-length_scale.set(24)  # default length
+length_scale.set(16)  # default length
 length_scale.pack(fill='x', padx=10)
 
 var_upper = tk.BooleanVar(value=True)
@@ -120,11 +142,17 @@ check_special.pack(fill='x', padx=10)
 button_frame_password = tk.Frame(password_tab)
 button_frame_password.pack(pady=20)
 
-reset_button = tk.Button(button_frame_password, text="Reset Window Size", command=reset_ui)
+reset_button = tk.Button(button_frame_password, text="Reset UI", command=reset_ui, bg='grey', fg='white')
 reset_button.pack(side='left', padx=5)
 
+spacer1_label = tk.Label(button_frame_password, text="")
+spacer1_label.pack(side='left', padx=(25, 25), pady=(0, 0))
+
 generate_button = tk.Button(button_frame_password, text="Generate Password", command=update_password)
-generate_button.pack(side='left', padx=5)
+generate_button.pack(side='right', padx=5)
+
+copy_password_button = tk.Button(button_frame_password, text="Copy Password", command=lambda: copy_to_clipboard(password_entry))
+copy_password_button.pack(side='right', pady=5)
 
 # Random Number Generator Widgets (add within number_tab)
 number_entry_label = tk.Label(number_tab, text="Random Number:")
@@ -136,18 +164,24 @@ number_entry.pack(fill='x', padx=10, pady=5)
 digits_label = tk.Label(number_tab, text="Amount of Digits:")
 digits_label.pack(side='top', pady=(10, 0))
 
-digits_entry = tk.Entry(number_tab, width=8)
+digits_entry = tk.Entry(number_tab, width=12)
 digits_entry.pack(padx=10, pady=5)
 
 # Create a frame in the number_tab for the buttons
 button_frame_number = tk.Frame(number_tab)
 button_frame_number.pack(pady=20)
 
-reset_button = tk.Button(button_frame_number, text="Reset Window Size", command=reset_ui)
+reset_button = tk.Button(button_frame_number, text="Reset UI", command=reset_ui, bg='grey', fg='white')
 reset_button.pack(side='left', padx=5)
 
+spacer2_label = tk.Label(button_frame_number, text="")
+spacer2_label.pack(side='left', padx=(25, 25), pady=(0, 0))
+
 generate_number_button = tk.Button(button_frame_number, text="Generate Number", command=update_random_number)
-generate_number_button.pack(side='left', padx=5)
+generate_number_button.pack(side='right', padx=5)
+
+copy_number_button = tk.Button(button_frame_number, text="Copy Number", command=lambda: copy_to_clipboard(number_entry))
+copy_number_button.pack(side='right', pady=5)
 
 # Allow window resizing
 root.resizable(True, True)
