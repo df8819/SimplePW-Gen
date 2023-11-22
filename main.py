@@ -116,7 +116,7 @@ def reset_ui():
 
 # Create the main window
 root = tk.Tk()
-root.title("Password Generator --- Sicher isch sicher 👍")
+root.title("Password Generator")
 center_window(400, 300)
 
 # Create Tab Control
