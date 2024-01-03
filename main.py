@@ -113,7 +113,6 @@ def center_window(width=300, height=200):
 def reset_ui():
     center_window(400, 300)
 
-
 # Create the main window
 root = tk.Tk()
 root.title("Password Generator")
